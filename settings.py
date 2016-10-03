@@ -22,11 +22,19 @@ class UserSettings(object):
 
     @staticmethod
     def read_json_settings(key=""):
-        file_vals = json.load(open('settings.json', 'r'))
-        if file_vals[key]:
-            return file_vals[key]
+        try:
+            file_vals = json.load(open('settings.json', 'r'))
+            if not key:
+                return  file_vals
 
-        return file_vals
+            if file_vals[key]:
+                return file_vals[key]
+
+            return file_vals
+        except (IOError, KeyError) as err:
+            print('Error while reading json file data:',err)
+            return {}
+
 
     @staticmethod
     def save_json_settings(settings, key):

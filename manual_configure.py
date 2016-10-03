@@ -8,6 +8,7 @@ def nothing(x):
 tag = "ball"
 #tag = "own_goal"
 #tag = "opp_goal"
+#tag = "ref"
 user_settings = UserSettings()
 settingsDict = user_settings.read_json_settings(tag)
 if (not settingsDict):
@@ -24,7 +25,7 @@ cv2.createTrackbar('s_high','configure',int(settingsDict['s_high']),255,nothing)
 cv2.createTrackbar('v_low','configure',int(settingsDict['v_low']),255,nothing)
 cv2.createTrackbar('v_high','configure',int(settingsDict['v_high']),255,nothing)
 
-kernel = np.ones((5, 5), np.uint8)
+kernel = np.ones((10, 10), np.uint8)
 mark_color = (0,165,255)
 
 while True:
@@ -35,12 +36,12 @@ while True:
 
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    H_low = cv2.getTrackbarPos('h_low', 'image')
-    H_high = cv2.getTrackbarPos('h_high', 'image')
-    S_low = cv2.getTrackbarPos('s_low', 'image')
-    S_high = cv2.getTrackbarPos('s_high', 'image')
-    V_low = cv2.getTrackbarPos('v_low', 'image')
-    V_high = cv2.getTrackbarPos('v_high', 'image')
+    H_low = cv2.getTrackbarPos('h_low', 'configure')
+    H_high = cv2.getTrackbarPos('h_high', 'configure')
+    S_low = cv2.getTrackbarPos('s_low', 'configure')
+    S_high = cv2.getTrackbarPos('s_high', 'configure')
+    V_low = cv2.getTrackbarPos('v_low', 'configure')
+    V_high = cv2.getTrackbarPos('v_high', 'configure')
 
     lower = np.array([H_low, S_low, V_low])
     upper = np.array([H_high, S_high, V_high])
@@ -50,6 +51,8 @@ while True:
     mask = cv2.erode(mask, kernel, iterations=2)
     dilation = cv2.dilate(mask, kernel, iterations=2)
     res = cv2.bitwise_and(frame, frame, mask=dilation)
+    blur = cv2.GaussianBlur(res, (15, 15), 0)
+
 
     _, contours, _ = cv2.findContours(dilation, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -71,7 +74,8 @@ while True:
         cv2.circle(frame, center, int(radius), mark_color, 2)
 
     cv2.imshow('Output', frame)
-    #cv2.imshow('configure', mask)
+    cv2.imshow('configure', res)
+    #cv2.imshow('Gaussian Blurring', blur)
 
     key = cv2.waitKey(1)
 
@@ -79,7 +83,7 @@ while True:
         break
 
     if key & 0xFF == ord('q'):
-        user_settings.save_settings({
+        user_settings.save_json_settings({
             'h_low': H_low, 's_low': S_low, 'v_low': V_low,
             'h_high': H_high, 's_high': S_high, 'v_high': V_high
         }, tag)
