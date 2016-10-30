@@ -10,6 +10,7 @@ coordinates = Coordinates()
 input_key = ""
 current_state = "static"
 detect_attempts = 0
+circle_speed = 40
 
 while input_key != "q":
     ball_found = input_key == "b"
@@ -23,6 +24,10 @@ while input_key != "q":
     else:
         detect_attempts += 1
         print "Ball not found on attempt:",detect_attempts
+        # Drive in circle till you find ball
+        if detect_attempts == 3:
+            drive_controller.drive_in_circle(circle_speed)
+            current_state = "circling"
 
     print "Current state:",current_state
     input_key = raw_input("Enter q to break, b to detect ball: ")
