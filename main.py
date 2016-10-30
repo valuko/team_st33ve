@@ -11,6 +11,8 @@ input_key = ""
 current_state = "static"
 detect_attempts = 0
 circle_speed = 40
+max_attempts = 15
+circle_threshold = 3
 
 while input_key != "q":
     ball_found = input_key == "b"
@@ -29,9 +31,14 @@ while input_key != "q":
         detect_attempts += 1
         print "Ball not found on attempt:",detect_attempts
         # Drive in circle till you find ball
-        if detect_attempts == 3:
+        if detect_attempts == circle_threshold:
             drive_controller.drive_in_circle(circle_speed)
             current_state = "circling"
+
+        # Drive to goal if after no ball still found after max_attempts, this will be a fail safe
+        if detect_attempts == max_attempts:
+            drive_controller.drive_to_coordinates(coordinate_data['black'])
+            current_state = "going_home"
 
     print "Current state:",current_state
     input_key = raw_input("Enter q to break, b to detect ball: ")
