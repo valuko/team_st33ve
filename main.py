@@ -7,5 +7,5 @@ motor_controller = MotorController()
 drive_controller = DriveController()
 coordinates = Coordinates()
 
-coordinate_data = coordinates.get_coordinates()
+coordinate_data = coordinates.get_coordinates(True)
 print "Coordinates ",coordinate_data
