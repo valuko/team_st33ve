@@ -18,9 +18,13 @@ while input_key != "q":
     print "\nCoordinates",coordinate_data
 
     if coordinate_data['ball'] != -1:
-        current_state = "driving"
+        # Stop first if its circling to avoid jerked movement
+        if current_state == "circling":
+            drive_controller.stop()
+
         detect_attempts = 0
         drive_controller.drive_to_coordinates(coordinate_data['ball'])
+        current_state = "driving"
     else:
         detect_attempts += 1
         print "Ball not found on attempt:",detect_attempts
