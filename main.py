@@ -18,7 +18,7 @@ while input_key != "q":
     print "\nCoordinates",coordinate_data
 
     if coordinate_data['ball'] != -1:
-        # Stop first if its circling to avoid jerked movement
+        # Stop first if its circling to avoid sudden jerked movement
         if current_state == "circling":
             drive_controller.stop()
 
