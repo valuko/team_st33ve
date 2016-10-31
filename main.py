@@ -1,11 +1,14 @@
 from drive_controller import DriveController
 from motor_controller import MotorController
 from coordinates import Coordinates
+from bolt_settings import BoltSettings
 
 
+app_settings = BoltSettings()
+val_dict = app_settings.read_dict()
 motor_controller = MotorController()
 drive_controller = DriveController(motor_controller)
-coordinates = Coordinates()
+coordinates = Coordinates(val_dict)
 
 input_key = ""
 current_state = "static"

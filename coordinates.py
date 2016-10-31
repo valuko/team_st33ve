@@ -4,14 +4,10 @@ from bolt_settings import BoltSettings
 
 
 class Coordinates:
-    def __init__(self):
-        pass
+    def __init__(self, values_dict):
+        self.values_dict = values_dict
 
-    @staticmethod
-    def get_coordinates():
-        vals = BoltSettings()
-        val_dict = vals.read_dict()
-
+    def get_coordinates(self):
         cap = cv2.VideoCapture(0)
 
         while cap.isOpened():
@@ -27,12 +23,12 @@ class Coordinates:
 
             for i in range(4):
                 colour = colours[i]
-                h_low = int(val_dict['H_low_' + colour])
-                h_top = int(val_dict['H_high_' + colour])
-                s_low = int(val_dict['S_low_' + colour])
-                s_top = int(val_dict['S_high_' + colour])
-                v_low = int(val_dict['V_low_' + colour])
-                v_top = int(val_dict['V_high_' + colour])
+                h_low = int(self.values_dict['H_low_' + colour])
+                h_top = int(self.values_dict['H_high_' + colour])
+                s_low = int(self.values_dict['S_low_' + colour])
+                s_top = int(self.values_dict['S_high_' + colour])
+                v_low = int(self.values_dict['V_low_' + colour])
+                v_top = int(self.values_dict['V_high_' + colour])
 
                 #masking
                 lower_colour = np.array([h_low, s_low, v_low])
@@ -84,6 +80,9 @@ class Coordinates:
 
                         coordinates = (cx, cy, width, height)
                 coordinates_dict[colour] = coordinates
+
+            key = cv2.waitKey(1)
+
             cap.release()
             return coordinates_dict
 
