@@ -26,28 +26,37 @@ class DriveController:
         if x > 340:
             # print("move right")
             self.motor_controller.move_left_wheel((speed + 8) * -1)
+            time.sleep(0.1)
             self.motor_controller.move_right_wheel(speed - 8)
+            time.sleep(0.1)
             self.motor_controller.move_back_wheel(8)
         elif x < 310:
             # print("move left")
             self.motor_controller.move_right_wheel(speed + 8)
+            time.sleep(0.1)
             self.motor_controller.move_left_wheel((speed - 8) * -1)
+            time.sleep(0.1)
             self.motor_controller.move_back_wheel(8)
         else:
             # print("move straght")
             self.motor_controller.move_right_wheel(speed + 20)
+            time.sleep(0.1)
             self.motor_controller.move_left_wheel((speed + 20) * -1)
 
     def drive_in_circle(self, multiplier=1):
         circle_speed = 14 * multiplier
         print "Driving round in circle now at speed:", circle_speed
-        self.motor_controller.move_left_wheel(circle_speed)
-        self.motor_controller.move_right_wheel(circle_speed)
         self.motor_controller.move_back_wheel(circle_speed)
+        time.sleep(0.5)
+        self.motor_controller.move_left_wheel(circle_speed)
+        time.sleep(0.5)
+        self.motor_controller.move_right_wheel(circle_speed)
+        time.sleep(0.5)
 
     def stop(self):
         print "Stopping now"
         self.motor_controller.stop()
 
-
-
+    def pause(self):
+        print "Pausing now..."
+        time.sleep(0.1)

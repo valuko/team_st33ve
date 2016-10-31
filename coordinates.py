@@ -4,11 +4,13 @@ from bolt_settings import BoltSettings
 
 
 class Coordinates:
+    cam_num = 1
+
     def __init__(self, values_dict):
         self.values_dict = values_dict
 
     def get_coordinates(self):
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(1)
 
         while cap.isOpened():
             ret, frame = cap.read()
