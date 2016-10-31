@@ -4,7 +4,7 @@ from coordinates import Coordinates
 
 
 motor_controller = MotorController()
-drive_controller = DriveController()
+drive_controller = DriveController(motor_controller)
 coordinates = Coordinates()
 
 input_key = ""
@@ -16,7 +16,7 @@ circle_threshold = 3
 
 while input_key != "q":
     ball_found = input_key == "b"
-    coordinate_data = coordinates.get_coordinates(ball_found)
+    coordinate_data = coordinates.get_coordinates()
     print "\nCoordinates",coordinate_data
 
     if coordinate_data['ball'] != -1:
