@@ -12,7 +12,7 @@ def nothing(x):
     pass
 
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 cv2.namedWindow('image')
 

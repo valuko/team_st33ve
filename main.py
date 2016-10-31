@@ -36,12 +36,13 @@ while True:
             print "Ball not found on attempt:",detect_attempts
             # Drive in circle till you find ball
             if detect_attempts == circle_threshold:
-                #drive_controller.drive_in_circle(circle_speed)
+                drive_controller.drive_in_circle(circle_speed)
                 current_state = "circling"
 
             # Drive to goal if after no ball still found after max_attempts, this will be a fail safe
             if detect_attempts == max_attempts:
                 drive_controller.drive_to_coordinates(coordinate_data['black'])
+                detect_attempts = 0
                 current_state = "going_home"
 
         print "Current state:",current_state

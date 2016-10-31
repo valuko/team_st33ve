@@ -47,11 +47,11 @@ class DriveController:
         circle_speed = 14 * multiplier
         print "Driving round in circle now at speed:", circle_speed
         self.motor_controller.move_back_wheel(circle_speed)
-        time.sleep(0.5)
+        time.sleep(1)
         self.motor_controller.move_left_wheel(circle_speed)
-        time.sleep(0.5)
+        time.sleep(1)
         self.motor_controller.move_right_wheel(circle_speed)
-        time.sleep(0.5)
+        time.sleep(1)
 
     def stop(self):
         print "Stopping now"
