@@ -5,7 +5,6 @@ class DriveController:
     def __init__(self, motor_controller):
         self.motor_controller = motor_controller
 
-    @staticmethod
     def drive_to_coordinates(self, coordinates):
 
         print "Driving to coordinates",coordinates
@@ -39,7 +38,6 @@ class DriveController:
             self.motor_controller.move_right_wheel(speed + 20)
             self.motor_controller.move_left_wheel((speed + 20) * -1)
 
-    @staticmethod
     def drive_in_circle(self, multiplier=1):
         circle_speed = 14 * multiplier
         print "Driving round in circle now at speed:", circle_speed
@@ -47,7 +45,6 @@ class DriveController:
         self.motor_controller.move_right_wheel(circle_speed)
         self.motor_controller.move_back_wheel(circle_speed)
 
-    @staticmethod
     def stop(self):
         print "Stopping now"
         self.motor_controller.stop()
