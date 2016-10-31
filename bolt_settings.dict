@@ -12,11 +12,11 @@ S_low_blue,161
 S_high_blue,255
 V_low_blue,105
 V_high_blue,255
-H_low_ball,4
-H_high_ball,19
-S_low_ball,240
+H_low_ball,0
+H_high_ball,46
+S_low_ball,152
 S_high_ball,255
-V_low_ball,147
+V_low_ball,0
 V_high_ball,255
 H_low_black,74
 H_high_black,112
