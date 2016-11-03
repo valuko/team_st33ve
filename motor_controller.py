@@ -4,8 +4,8 @@ import time
 
 class MotorController:
     right_wheel = "1"
-    left_wheel = "2"
-    back_wheel = "3"
+    left_wheel = "3"
+    back_wheel = "2"
     speed_cmd = ':sd'
     baud_rate = 9600
     port = "COM7"
@@ -17,12 +17,17 @@ class MotorController:
     # The ids for right, left and back wheel controllers are 1, 2 and 3 respectively
     def move_right_wheel(self, speed=40):
         self.motor.write(self.right_wheel + self.speed_cmd + str(speed) + '\n')
+        time.sleep(0.1)
 
     def move_left_wheel(self, speed=40):
         self.motor.write(self.left_wheel + self.speed_cmd + str(speed) + '\n')
+        time.sleep(0.1)
+
 
     def move_back_wheel(self, speed=40):
         self.motor.write(self.back_wheel + self.speed_cmd + str(speed) + '\n')
+        time.sleep(0.1)
+
 
     def stop(self):
         stop_speed = "0"

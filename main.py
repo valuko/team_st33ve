@@ -2,8 +2,12 @@ from drive_controller import DriveController
 from motor_controller import MotorController
 from coordinates import Coordinates
 from bolt_settings import BoltSettings
+import time
+import numpy as np
+import cv2
 
 
+cap = cv2.VideoCapture(1)
 app_settings = BoltSettings()
 val_dict = app_settings.read_dict()
 motor_controller = MotorController()
@@ -17,16 +21,23 @@ circle_speed = 10
 max_attempts = 15
 circle_threshold = 3
 
+
 while True:
     try:
+        ret, frame = cap.read()
+
+        if not ret:
+            print "Frame not ready for readying"
+            continue
+
         ball_found = input_key == "b"
-        coordinate_data = coordinates.get_coordinates()
+        coordinate_data = coordinates.get_coordinates(frame)
         print "\nCoordinates",coordinate_data
 
         if coordinate_data['ball'] != -1:
             # Stop first if its circling to avoid sudden jerked movement
-            if current_state == "circling":
-                drive_controller.stop()
+            #if current_state == "circling":
+                #drive_controller.stop()
 
             detect_attempts = 0
             drive_controller.drive_to_coordinates(coordinate_data['ball'])
@@ -45,7 +56,14 @@ while True:
                 detect_attempts = 0
                 current_state = "going_home"
 
+
         print "Current state:",current_state
+        time.sleep(1)
+
+        cv2.imshow('Video', frame)
+        key = cv2.waitKey(1)
         # input_key = raw_input("Enter q to break, b to detect ball: ")
     except KeyboardInterrupt:
         break
+
+cap.release()
