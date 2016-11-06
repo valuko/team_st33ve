@@ -7,9 +7,6 @@ class Coordinates:
     cam_num = 1
 
     def __init__(self, values_dict):
-        #app_settings = BoltSettings()
-        #self.values_dict = app_settings.read_dict()
-        #self.cap = cap
         self.values_dict = values_dict
 
     def get_coordinates(self, frame):
@@ -79,8 +76,7 @@ class Coordinates:
                     coordinates = (cx, cy, width, height)
             coordinates_dict[colour] = coordinates
 
-            #cv2.imshow('Video', frame)
-        key = cv2.waitKey(1)
+        # key = cv2.waitKey(1)
 
         return coordinates_dict
 

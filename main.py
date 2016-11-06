@@ -36,8 +36,8 @@ while True:
 
         if coordinate_data['ball'] != -1:
             # Stop first if its circling to avoid sudden jerked movement
-            #if current_state == "circling":
-                #drive_controller.stop()
+            if current_state == "circling":
+                drive_controller.stop()
 
             detect_attempts = 0
             drive_controller.drive_to_coordinates(coordinate_data['ball'])
@@ -56,13 +56,11 @@ while True:
                 detect_attempts = 0
                 current_state = "going_home"
 
-
         print "Current state:",current_state
-        time.sleep(1)
-
-        cv2.imshow('Video', frame)
         key = cv2.waitKey(1)
-        # input_key = raw_input("Enter q to break, b to detect ball: ")
+        cv2.imshow('Video', frame)
+
+        time.sleep(1)
     except KeyboardInterrupt:
         break
 
