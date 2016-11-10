@@ -19,6 +19,7 @@ detect_attempts = 0
 circle_speed = 10
 max_attempts = 15
 circle_threshold = 3
+command = ""
 
 while True:
     try:
@@ -38,25 +39,31 @@ while True:
             # drive_controller.stop()
 
             detect_attempts = 0
-            drive_controller.drive_to_coordinates(coordinate_data['ball'])
+            command = "drivetoball"
             current_state = "driving"
         else:
             detect_attempts += 1
             print "Ball not found on attempt:", detect_attempts
             # Drive in circle till you find ball
             if detect_attempts == circle_threshold:
-                drive_controller.drive_in_circle(circle_speed)
+                command = "circle"
                 current_state = "circling"
-
             # Drive to goal if after no ball still found after max_attempts, this will be a fail safe
             if detect_attempts == max_attempts:
-                drive_controller.drive_to_coordinates(coordinate_data['black'])
+                command = "gohome"
                 detect_attempts = 0
                 current_state = "going_home"
 
         print "Current state:", current_state
 
-        #cv2.imshow('Video', frame)
+        if command == "circle":
+            drive_controller.drive_in_circle(circle_speed)
+        elif command == "drivetoball":
+            drive_controller.drive_to_coordinates(coordinate_data['ball'])
+        elif command == "gohome":
+            drive_controller.drive_to_coordinates(coordinate_data['black'])
+
+        # cv2.imshow('Video', frame)
         key = cv2.waitKey(1)
         time.sleep(0.1)
     except KeyboardInterrupt:
