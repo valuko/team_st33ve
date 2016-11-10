@@ -59,7 +59,7 @@ while True:
 
         cv2.imshow('Video', frame)
         key = cv2.waitKey(1)
-        # input_key = raw_input("Enter q to break, b to detect ball: ")
+        time.sleep(1)
     except KeyboardInterrupt:
         break
 
