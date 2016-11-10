@@ -25,32 +25,27 @@ class DriveController:
 
         if x > 340:
             # print("move right")
-            self.motor_controller.move_left_wheel((speed + 8) * 1)
-            time.sleep(0.1)
-            self.motor_controller.move_right_wheel((speed - 8) * -1)
-            time.sleep(0.1)
-            self.motor_controller.move_back_wheel(8)
+            ls = speed + 8
+            rs = (speed - 8) * -1
+            bs = 8
+            self.motor_controller.move(ls, rs, bs)
         elif x < 310:
             # print("move left")
-            self.motor_controller.move_right_wheel((speed - 8) * -1)
-            time.sleep(0.1)
-            self.motor_controller.move_left_wheel((speed - 8) * 1)
-            time.sleep(0.1)
-            self.motor_controller.move_back_wheel(8)
+            ls = speed - 8
+            rs = (speed - 8) * -1
+            bs = 8
+            self.motor_controller.move(ls, rs, bs)
         else:
-            # print("move straght")
-            self.motor_controller.move_right_wheel(speed + 20)
-            time.sleep(0.1)
-            self.motor_controller.move_left_wheel((speed + 20) * -1)
+            # print("move straight")
+            rs = speed + 20
+            ls = (speed + 20) * -1
+            bs = 0
+            self.motor_controller.move(ls, rs, bs)
 
     def drive_in_circle(self, multiplier=1):
         circle_speed = 14 * multiplier
         print "Driving round in circle now at speed:", circle_speed
-        self.motor_controller.move_back_wheel(circle_speed)
-        time.sleep(0.1)
-        self.motor_controller.move_left_wheel(circle_speed)
-        time.sleep(0.1)
-        self.motor_controller.move_right_wheel(circle_speed)
+        self.motor_controller.circlearound(circle_speed)
         time.sleep(0.1)
 
     def stop(self):
