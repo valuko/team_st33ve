@@ -19,9 +19,9 @@ class MotorController:
         time.sleep(0.1)
 
     def move(self, lspeed=40, rspeed=40, bspeed=40):
-        nl = str(lspeed).zfill(3)
-        nr = str(rspeed).zfill(3)
-        nb = str(bspeed).zfill(3)
+        nl = str(lspeed).zfill(4)
+        nr = str(rspeed).zfill(4)
+        nb = str(bspeed).zfill(4)
         print ('l' + nl + 'r' + nr + 'b' + nb + '\n')
         self.motor.write('l' + nl + 'r' + nr + 'b' + nb + '\n')
         time.sleep(0.1)
