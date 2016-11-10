@@ -81,7 +81,7 @@ class Coordinates:
                 coordinates_dict[colour] = coordinates
 
                 # cv2.imshow('Video', frame)
-        key = cv2.waitKey(1)
+        #key = cv2.waitKey(1)
 
         return coordinates_dict
 

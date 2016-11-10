@@ -55,12 +55,12 @@ while True:
                 current_state = "going_home"
 
         print "Current state:", current_state
-        time.sleep(1)
 
-        cv2.imshow('Video', frame)
+        #cv2.imshow('Video', frame)
         key = cv2.waitKey(1)
-        time.sleep(1)
+        time.sleep(0.1)
     except KeyboardInterrupt:
+        drive_controller.stop()
         break
 
 cap.release()
