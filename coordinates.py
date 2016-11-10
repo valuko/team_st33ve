@@ -7,6 +7,9 @@ class Coordinates:
     cam_num = 1
 
     def __init__(self, values_dict):
+        #app_settings = BoltSettings()
+        #self.values_dict = app_settings.read_dict()
+        #self.cap = cap
         self.values_dict = values_dict
 
     def get_coordinates(self, frame):
@@ -25,7 +28,7 @@ class Coordinates:
             v_low = int(self.values_dict['V_low_' + colour])
             v_top = int(self.values_dict['V_high_' + colour])
 
-            #masking
+            # masking
             lower_colour = np.array([h_low, s_low, v_low])
             upper_colour = np.array([h_top, s_top, v_top])
             mask = cv2.inRange(hsv, lower_colour, upper_colour)
@@ -42,41 +45,43 @@ class Coordinates:
             # Getting the biggest blob's coordinates (that is probably the closest object)
             biggest_area = 0
             coordinates = -1
-            for cnt in contours:
-                # width = cv2.contourArea(cnt)
-                rect = cv2.minAreaRect(cnt)
-                width = rect[1][0]
-                height = rect[1][1]
-                area = width * height
+            if len(contours) > 0:
+                for cnt in contours:
+                    # width = cv2.contourArea(cnt)
+                    rect = cv2.minAreaRect(cnt)
+                    width = rect[1][0]
+                    height = rect[1][1]
+                    area = width * height
 
-                if width < 5 and (colour == "yellow" or colour == "blue"):
-                    continue
-
-                if area > biggest_area:
-                    moment = cv2.moments(cnt)
-                    try:
-                        cx = int(moment['m10'] / moment['m00'])
-                        cy = int(moment['m01'] / moment['m00'])
-                    except ZeroDivisionError:
-                        print("zero division")
+                    if width < 5 and (colour == "yellow" or colour == "blue"):
                         continue
-                    biggest_area = area
-                    if colour == "ball":
-                        black = coordinates_dict["black"]
-                        # print("black: " + str(black))
-                        # print("ball: " + str(cx) + ", " + str(cy))
-                        if black != -1:
-                            black_x = black[0]
-                            black_y = black[1]
-                            black_width = black[2]
-                            if black_y > cy and black_x + black_width / 2 > cx > black_width / 2 - black_x:  # ball is out of the field
-                                print("ball out of field")
-                                continue
 
-                    coordinates = (cx, cy, width, height)
-            coordinates_dict[colour] = coordinates
+                    if area > biggest_area:
+                        moment = cv2.moments(cnt)
+                        try:
+                            cx = int(moment['m10'] / moment['m00'])
+                            cy = int(moment['m01'] / moment['m00'])
+                        except ZeroDivisionError:
+                            print("zero division")
+                            continue
+                        biggest_area = area
+                        if colour == "ball":
+                            black = coordinates_dict["black"]
+                            # print("black: " + str(black))
+                            # print("ball: " + str(cx) + ", " + str(cy))
+                            if black != -1:
+                                black_x = black[0]
+                                black_y = black[1]
+                                black_width = black[2]
+                                if black_y > cy and black_x + black_width / 2 > cx > black_width / 2 - black_x:  # ball is out of the field
+                                    print("ball out of field")
+                                    continue
 
-        # key = cv2.waitKey(1)
+                        coordinates = (cx, cy, width, height)
+                coordinates_dict[colour] = coordinates
+
+                # cv2.imshow('Video', frame)
+        key = cv2.waitKey(1)
 
         return coordinates_dict
 
@@ -89,5 +94,3 @@ class Coordinates:
         else:
             coordinates_dict = {"ball": -1, "blue": -1, "yellow": -1, "black": -1}
         '''
-
-
