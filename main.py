@@ -67,7 +67,7 @@ while True:
         key = cv2.waitKey(1)
         time.sleep(0.1)
     except KeyboardInterrupt:
-        drive_controller.stop()
+        #drive_controller.stop()
         break
 
 cap.release()
