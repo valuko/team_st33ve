@@ -27,7 +27,6 @@ try:
 
     while True:
         main_controller.ping()
-        main_controller.dribbler_start()
         #main_controller.charge_kick()
 
         ret, frame = cap.read()
@@ -39,6 +38,7 @@ try:
             if coordinate_data['ball'] != -1:
                 print ("Driving to ball coordinates",coordinate_data['ball'])
                 drive_controller.drive_to_coordinates(coordinate_data['ball'])
+                main_controller.dribbler_start()
             else:
                 print ("Ball not found")
 
@@ -52,7 +52,7 @@ try:
             break
 
         print ("Loop end")
-        cv2.imshow('Video', frame)
+        #cv2.imshow('Video', frame)
         key = cv2.waitKey(1)
         time.sleep(0.1)
 

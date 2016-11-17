@@ -46,6 +46,7 @@ class MainBoardController:
     def detect_ball_catch(self):
         self.is_ball = False
         while True:
+            print ("Reading IR...")
             line = self.mainboard.readline().strip()
             if line == self.ball_catch_cmd:
                 self.is_ball = True
