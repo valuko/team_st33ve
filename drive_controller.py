@@ -48,6 +48,9 @@ class DriveController:
         self.motor_controller.circlearound(circle_speed)
         time.sleep(0.1)
 
+    def around_ball(self, multiplier=1):
+        self.motor_controller.move_back_wheel(10 * multiplier)
+
     def stop(self):
         print "Stopping now"
         self.motor_controller.stop()

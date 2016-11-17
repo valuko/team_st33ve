@@ -12,6 +12,19 @@ class Coordinates:
         #self.cap = cap
         self.values_dict = values_dict
 
+    def parse_goal_coordinates(self, coordinates):
+        opponent_goal_coord = coordinates[self.values_dict["opponent_goal_color"]]
+        own_goal_coord = coordinates[self.values_dict["own_goal_color"]]
+
+        if own_goal_coord != -1 and opponent_goal_coord != -1:
+            self_x = own_goal_coord[0]
+            opponent_x = opponent_goal_coord[0]
+
+            if opponent_x + 10 > self_x > 10 - opponent_x:  # The colours are of a robot not of a gate
+                opponent_goal_coord = -1
+
+        return opponent_goal_coord
+
     def get_coordinates(self, frame):
         coordinates_dict = {"ball": -1, "blue": -1, "yellow": -1, "black": -1}
 
