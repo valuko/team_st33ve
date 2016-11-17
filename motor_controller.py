@@ -9,12 +9,15 @@ class MotorController:
     speed_cmd = ':sd'
     baud_rate = 9600
     #port = "/dev/ttyACM1"
-    port = "COM7"
+    port = "COM6"
     last_cmd = ""
 
     def __init__(self):
         #self.baud_rate = 9600
         self.motor = serial.Serial(self.port, self.baud_rate, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE)  # , writeTimeout=0)
+
+    def get_motor(self):
+        return self.motor
 
     def circlearound(self, speed=40):
         cmd = 'ca'+str(speed)+'\n'
