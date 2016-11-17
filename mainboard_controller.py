@@ -17,6 +17,9 @@ class MainBoardController:
     def has_ball(self):
         return self.is_ball
 
+    def ping(self):
+        self.mainboard.write("p\n")
+
     def dribbler_start(self):
         pf = self.dribbler_prefix
         self.mainboard.write(pf+"0.1\n")
