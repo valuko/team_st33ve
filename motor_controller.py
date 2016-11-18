@@ -25,6 +25,7 @@ class MotorController:
     def circlearound(self, speed=40):
         cmd = 'ca'+str(speed)+'\n'
         if cmd != self.last_cmd:
+            print (cmd)
             self.motor.write(cmd)
             time.sleep(0.1)
             self.last_cmd = cmd
@@ -38,7 +39,7 @@ class MotorController:
         if cmd != self.last_cmd:
             print (cmd)
             self.motor.write(cmd)
-            #self.last_cmd = cmd
+            self.last_cmd = cmd
 
     def stop(self):
         self.circlearound(0)
@@ -53,5 +54,9 @@ class MotorController:
         time.sleep(0.1)
 
     def move_back_wheel(self, speed=40):
-        self.motor.write(self.back_wheel + self.speed_cmd + str(speed) + '\n')
-        time.sleep(0.1)
+        cmd = self.back_wheel + self.speed_cmd + str(speed) + '\n'
+        if cmd != self.last_cmd:
+            print (cmd)
+            self.motor.write(cmd)
+            #self.last_cmd = cmd
+        #time.sleep(0.1)

@@ -5,7 +5,8 @@ import cv2
 # Load Global Settings
 user_settings = UserSettings()
 settingsDict = user_settings.read_settings()
-opg = "ball"
+#opg = "ball"
+opg = "blue"
 
 
 def nothing(x):

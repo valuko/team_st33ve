@@ -31,6 +31,7 @@ detect_attempts = 0
 circle_speed = 10
 max_attempts = 15
 circle_threshold = 3
+
 command = ""
 own_goal_color = val_dict['own_goal_color']
 
@@ -63,9 +64,10 @@ try:
         if True:
             # main_controller.ping()
             main_controller.pre_dribbler()
-            main_controller.charge_kick()
             time.sleep(3)
             main_controller.dribbler_start()
+            time.sleep(2)
+            main_controller.charge_kick()
             game_on = True
 
             while game_on:
@@ -84,38 +86,36 @@ try:
                 if coordinate_data['ball'] != -1 or main_controller.has_ball():
                     if main_controller.has_ball():
                         print("has ball")
-                        # Take this out later
-                        main_controller.dribbler_stop()
-                        drive_controller.stop()
-                        time.sleep(1)
-                        kick_action()
-                        game_on = False
-                        break
 
                         if coordinate_data[opponent_goal_color] == -1:
-                            drive_controller.around_ball(-5)
+                            print "Goal not found. Adjust"
+                            drive_controller.around_ball(7)
                             continue
 
                         # Goal now found
                         opponent_goal_coordinates = coordinates.parse_goal_coordinates(coordinate_data)
                         if opponent_goal_coordinates == -1:
                             # Continue
-                            drive_controller.around_ball(-5)
+                            drive_controller.around_ball(5)
+                            print "Adjusting for goal"
                             continue
 
                         opponent_x = opponent_goal_coordinates[0]
                         width = opponent_goal_coordinates[2]
 
-                        if opponent_x < 350 - width / 4:
-                            drive_controller.around_ball(2)
-                        elif opponent_x > 350 + width / 4:
-                            drive_controller.around_ball(-2)
-                        else:  # facing goal
+                        #if opponent_x < 350 - width / 4:
+                        #    drive_controller.around_ball(2)
+                        #elif opponent_x > 350 + width / 4:
+                        #    drive_controller.around_ball(-2)
+                        if width > 90.0:
                             print("facing!")
                             drive_controller.stop()
                             kick_action()
                             game_on = False
                             break
+                        else:  # facing goal
+                            print ("Not enough width", width)
+                            drive_controller.around_ball(2)
 
                     if current_state == STATE_CIRCLING:
                         drive_controller.stop()

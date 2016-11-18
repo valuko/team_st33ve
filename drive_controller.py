@@ -47,7 +47,7 @@ class DriveController:
             ls = speed + 20
             rs = (speed + 20) * -1
             bs = 0
-            almost_at_ball = True
+            #almost_at_ball = True
             self.motor_controller.move(ls, rs, bs)
         return almost_at_ball
 
