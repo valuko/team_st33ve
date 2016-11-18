@@ -11,11 +11,11 @@ import cv2
 import threading
 import serial
 
-#port = "/dev/ttyACM1"
-port = "COM6"
+port = "/dev/ttyACM0"
+#port = "COM6"
 board_serial = serial.Serial(port, 9600, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE, timeout=0)
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 app_settings = BoltSettings()
 val_dict = app_settings.read_dict()
 motor_controller = MotorController(board_serial)
@@ -65,9 +65,10 @@ try:
             # main_controller.ping()
             main_controller.pre_dribbler()
             time.sleep(3)
-            main_controller.dribbler_start()
-            time.sleep(2)
-            main_controller.charge_kick()
+            #main_controller.dribbler_start()
+            #time.sleep(2)
+            print("game on")
+            #main_controller.charge_kick()
             game_on = True
 
             while game_on:
@@ -121,14 +122,17 @@ try:
                         drive_controller.stop()
                         current_state = STATE_DRIVING
                     elif current_state == STATE_TRAP_BALL:
+                        print "starting dribbler"
+                        main_controller.dribbler_start()
+                        time.sleep(2)
                         print("Waiting to catch ball")
-                        main_controller.detect_ball_catch()
-                        drive_controller.stop()
+                        #main_controller.detect_ball_catch()
+                        #drive_controller.stop()
 
                     else:
                         almost_at_ball = drive_controller.drive_to_coordinates(coordinate_data['ball'])
                         current_state = STATE_DRIVING
-                        time.sleep(0.1)
+                        #time.sleep(1)
                         # main_controller.dribbler_start()
                         if almost_at_ball:
                             current_state = STATE_TRAP_BALL
@@ -158,15 +162,16 @@ try:
                 # print "Current state:", current_state
 
                 # cv2.imshow('Video', frame)
-                key = cv2.waitKey(5)
-                #time.sleep(1)
+                key = cv2.waitKey(1)
+                time.sleep(0.1)
 
             break
 
 except KeyboardInterrupt:
     # shutdown
     drive_controller.stop()
-    #main_controller.dribbler_stop()
+    time.sleep(0.5)
+    main_controller.dribbler_stop()
     exit()
 
 cap.release()

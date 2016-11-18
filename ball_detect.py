@@ -13,7 +13,7 @@ def nothing(x):
     pass
 
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 cv2.namedWindow('image')
 
@@ -56,7 +56,7 @@ while cap.isOpened():
     res = cv2.bitwise_and(frame, frame, mask=dilation)
 
     # Detect blobs.
-    _, contours, _ = cv2.findContours(dilation, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(dilation, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
     if contours:
         #cnt = contours[0]

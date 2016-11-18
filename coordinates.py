@@ -54,7 +54,7 @@ class Coordinates:
             #mask = cv2.bitwise_and(hsv, hsv, mask= mask)
 
             # Detect blobs.
-            _, contours, _ = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+            contours, _ = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
             # Getting the biggest blob's coordinates (that is probably the closest object)
             biggest_area = 0

@@ -12,7 +12,7 @@ import threading
 import serial
 
 #port = "/dev/ttyACM1"
-port = "COM6"
+port = "COM7"
 board_serial = serial.Serial(port, 9600, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE, timeout=0)
 
 cap = cv2.VideoCapture(1)
