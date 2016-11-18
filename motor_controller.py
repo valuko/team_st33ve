@@ -38,10 +38,10 @@ class MotorController:
         if cmd != self.last_cmd:
             print (cmd)
             self.motor.write(cmd)
-            self.last_cmd = cmd
+            #self.last_cmd = cmd
 
     def stop(self):
-        self.motor_controller.circlearound(0)
+        self.circlearound(0)
 
     # The ids for right, left and back wheel controllers are 1, 2 and 3 respectively
     def move_right_wheel(self, speed=40):

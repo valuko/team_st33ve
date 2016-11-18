@@ -11,8 +11,8 @@ import cv2
 import threading
 import serial
 
-port = "/dev/ttyACM1"
-#port = "COM7"
+#port = "/dev/ttyACM1"
+port = "COM6"
 board_serial = serial.Serial(port, 9600, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE, timeout=0)
 
 cap = cv2.VideoCapture(1)
@@ -21,7 +21,7 @@ val_dict = app_settings.read_dict()
 motor_controller = MotorController(board_serial)
 drive_controller = DriveController(motor_controller)
 coordinates = Coordinates(val_dict)
-referee_controller = RefereeController(motor_controller, val_dict)
+#referee_controller = RefereeController(motor_controller, val_dict)
 main_controller = MainBoardController(board_serial)
 
 input_key = ""
@@ -33,6 +33,7 @@ max_attempts = 15
 circle_threshold = 3
 command = ""
 own_goal_color = val_dict['own_goal_color']
+
 opponent_goal_color = val_dict['opponent_goal_color']
 game_on = False
 frame_read_tries = 3
@@ -40,6 +41,7 @@ frame_read_tries = 3
 STATE_CIRCLING = 'circling'
 STATE_DRIVING = 'idle'
 STATE_DRIVING_HOME = 'going_home'
+STATE_TRAP_BALL = 'awaiting_ball'
 
 
 def kick_action():
@@ -51,17 +53,19 @@ def kick_action():
 
 try:
     # Start the referee module
-    #td1 = threading.Thread(target=referee_controller.listen)
-    #td2 = threading.Thread(target=main_controller.detect_ball_catch)
-    #td1.start()
-    #td2.start()
+    # td1 = threading.Thread(target=referee_controller.listen)
+    # td2 = threading.Thread(target=main_controller.detect_ball_catch)
+    # td1.start()
+    # td2.start()
 
     while True:
-        #if referee_controller.game_status():
+        # if referee_controller.game_status():
         if True:
-            #main_controller.ping()
-            #main_controller.dribbler_start()
-            #main_controller.charge_kick()
+            # main_controller.ping()
+            main_controller.pre_dribbler()
+            main_controller.charge_kick()
+            time.sleep(3)
+            main_controller.dribbler_start()
             game_on = True
 
             while game_on:
@@ -69,6 +73,7 @@ try:
                 for i in range(3):
                     ret, frame = cap.read()
 
+                #cv2.imshow('Video', frame)
                 if not ret:
                     print "Frame not ready for reading"
                     continue
@@ -79,6 +84,14 @@ try:
                 if coordinate_data['ball'] != -1 or main_controller.has_ball():
                     if main_controller.has_ball():
                         print("has ball")
+                        # Take this out later
+                        main_controller.dribbler_stop()
+                        drive_controller.stop()
+                        time.sleep(1)
+                        kick_action()
+                        game_on = False
+                        break
+
                         if coordinate_data[opponent_goal_color] == -1:
                             drive_controller.around_ball(-5)
                             continue
@@ -106,43 +119,54 @@ try:
 
                     if current_state == STATE_CIRCLING:
                         drive_controller.stop()
+                        current_state = STATE_DRIVING
+                    elif current_state == STATE_TRAP_BALL:
+                        print("Waiting to catch ball")
+                        main_controller.detect_ball_catch()
+                        drive_controller.stop()
 
-                    current_state = STATE_DRIVING
-
-                    # Drive to ball now
-                    drive_controller.drive_to_coordinates(coordinate_data['ball'])
-
-                    # Sleep until you have the ball
-                    while not main_controller.has_ball():
-                        print("Ball not yet found")
-                        continue
+                    else:
+                        almost_at_ball = drive_controller.drive_to_coordinates(coordinate_data['ball'])
+                        current_state = STATE_DRIVING
+                        time.sleep(0.1)
+                        # main_controller.dribbler_start()
+                        if almost_at_ball:
+                            current_state = STATE_TRAP_BALL
+                            # activate dribbler
+                            #main_controller.pre_dribbler()
+                            #time.sleep(1)
+                            #main_controller.dribbler_start()
 
                     # stop and look for the goal
-                    drive_controller.stop()
+                    #drive_controller.stop()
 
                 else:
                     detect_attempts += 1
                     print "Ball not found on attempt:", detect_attempts
                     # Drive in circle till you find ball
                     if detect_attempts == circle_threshold:
-                        #drive_controller.drive_in_circle(circle_speed)
+                        # drive_controller.drive_in_circle(circle_speed)
                         current_state = "circling"
                         time.sleep(2)
                     # Drive to goal if after no ball still found after max_attempts, this will be a fail safe
                     if detect_attempts == max_attempts:
-                        #drive_controller.drive_to_coordinates(coordinate_data['black'])
+                        # drive_controller.drive_to_coordinates(coordinate_data['black'])
                         detect_attempts = 0
                         current_state = "going_home"
                         time.sleep(5)
 
-                #print "Current state:", current_state
+                # print "Current state:", current_state
 
                 # cv2.imshow('Video', frame)
                 key = cv2.waitKey(5)
-                time.sleep(0.1)
+                #time.sleep(1)
+
+            break
 
 except KeyboardInterrupt:
-    #shutdown
+    # shutdown
+    drive_controller.stop()
+    #main_controller.dribbler_stop()
     exit()
 
 cap.release()

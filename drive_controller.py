@@ -11,6 +11,7 @@ class DriveController:
     def drive_to_coordinates(self, coordinates):
 
         print "Driving to coordinates",coordinates
+        almost_at_ball = False
 
         if coordinates == -1:
             return
@@ -22,30 +23,33 @@ class DriveController:
 
         # the closer the ball the smaller the speed
         if y < 150:
-            speed = 20
+            speed = 30
+            almost_at_ball = True
         elif y > 500:
             speed = 70
         else:
             speed = 50
 
-        if x > 340:
+        if x < 330:
             # print("move right")
-            ls = speed + 8
-            rs = (speed - 8) * -1
+            ls = (speed + 8) * -1
+            rs = (speed + 8) * -1
             bs = 8
             self.motor_controller.move(ls, rs, bs)
-        elif x < 310:
+        elif x > 450:
             # print("move left")
-            ls = speed - 8
-            rs = (speed - 8) * -1
+            ls = speed + 8
+            rs = speed + 8
             bs = 8
             self.motor_controller.move(ls, rs, bs)
         else:
             # print("move straight")
-            rs = speed + 20
-            ls = (speed + 20) * -1
+            ls = speed + 20
+            rs = (speed + 20) * -1
             bs = 0
+            almost_at_ball = True
             self.motor_controller.move(ls, rs, bs)
+        return almost_at_ball
 
     def drive_in_circle(self, multiplier=1):
         circle_speed = 14 * multiplier
