@@ -9,12 +9,15 @@ class MotorController:
     speed_cmd = ':sd'
     baud_rate = 9600
     #port = "/dev/ttyACM1"
-    port = "COM6"
+    port = "COM7"
     last_cmd = ""
+    motor = ""
 
-    def __init__(self):
+    def __init__(self, motor):
         #self.baud_rate = 9600
-        self.motor = serial.Serial(self.port, self.baud_rate, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE)  # , writeTimeout=0)
+        self.motor = motor
+        #self.motor = serial.Serial(self.port, self.baud_rate, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE)  # , writeTimeout=0)
+
 
     def get_motor(self):
         return self.motor
@@ -31,10 +34,10 @@ class MotorController:
         nr = str(rspeed).zfill(4)
         nb = str(bspeed).zfill(4)
         cmd = 'l' + nr + 'b' + nb + 'l' + nl + '\n'
+        #print("move cmd ",cmd)
         if cmd != self.last_cmd:
             print (cmd)
             self.motor.write(cmd)
-            time.sleep(0.1)
             self.last_cmd = cmd
 
     def stop(self):

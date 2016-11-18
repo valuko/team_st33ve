@@ -5,6 +5,8 @@ __author__ = 'Victor'
 
 
 class RefereeController(object):
+    motor_controller = ""
+
     def __init__(self, motor_controller, settings, game_status=False):
         self.serialChannel = serial.Serial("COM9", 9600)
         self.settings = settings

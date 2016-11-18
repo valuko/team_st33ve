@@ -2,6 +2,9 @@ import time
 
 
 class DriveController:
+    current_vals = ""
+    motor_controller = ""
+
     def __init__(self, motor_controller):
         self.motor_controller = motor_controller
 
@@ -15,13 +18,15 @@ class DriveController:
         x = coordinates[0]
         y = coordinates[1]
 
+        #actualX = 320 - x
+
         # the closer the ball the smaller the speed
         if y < 150:
-            speed = 70
-        elif y > 500:
             speed = 20
+        elif y > 500:
+            speed = 70
         else:
-            speed = 40
+            speed = 50
 
         if x > 340:
             # print("move right")
