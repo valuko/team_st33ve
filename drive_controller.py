@@ -22,35 +22,35 @@ class DriveController:
         #actualX = 320 - x
 
         # the closer the ball the smaller the speed
-        if y < 150:
-            speed = 20
+        if y < 200:
+            speed = 100
             #almost_at_ball = True
-        elif y > 500:
-            speed = 50
-        else:
+        elif y > 400:
             speed = 30
+        else:
+            speed = 65
 
         ls = 0
         rs = 0
         bs = 0
 
-        if x < 330:
+        if x > 400:
             print("move right")
-            ls = speed + 8
-            rs = speed + 8
+            ls = speed + 10
+            rs = speed + 10
             bs = 8
-        elif x > 450:
+        elif x < 300:
             print("move left")
-            ls = (speed + 8) * -1
-            rs = (speed + 8) * -1
+            ls = (speed + 10) * -1
+            rs = (speed + 10) * -1
             bs = 8
         else:
             print("move straight")
             ls = speed + 20
             rs = (speed + 20) * -1
             bs = 0
-            #almost_at_ball = True
-        #self.motor_controller.move(ls, rs, bs)
+            almost_at_ball = True
+        self.motor_controller.move(ls, rs, bs)
         return almost_at_ball
 
     def drive_in_circle(self, multiplier=1):

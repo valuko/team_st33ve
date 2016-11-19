@@ -11,7 +11,7 @@ import cv2
 import threading
 import serial
 
-port = "/dev/ttyACM0"
+port = "/dev/ttyACM1"
 #port = "COM6"
 board_serial = serial.Serial(port, 9600, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE, timeout=0)
 
@@ -43,6 +43,7 @@ STATE_CIRCLING = 'circling'
 STATE_DRIVING = 'idle'
 STATE_DRIVING_HOME = 'going_home'
 STATE_TRAP_BALL = 'awaiting_ball'
+STATE_DRIVING_STRAIGHT = 'stt'
 
 
 def kick_action():
@@ -82,9 +83,9 @@ try:
                     continue
 
                 coordinate_data = coordinates.get_coordinates(frame)
-                print "\nCoordinates", coordinate_data
+                print "\nCoordinates", coordinate_data['ball']
 
-                if coordinate_data['ball'] != -1 or main_controller.has_ball():
+                if coordinate_data['ball'] != -1 or main_controller.has_ball() or current_state == STATE_DRIVING_STRAIGHT:
                     if main_controller.has_ball():
                         print("has ball")
 
@@ -128,18 +129,29 @@ try:
                         print("Waiting to catch ball")
                         #main_controller.detect_ball_catch()
                         #drive_controller.stop()
-
+                    elif coordinate_data['ball'][1] >= 450 and coordinate_data['ball'][0] > 320:
+                        motor_controller.move(20, -20, 0)
+                        print "start dribbler"
+                        main_controller.dribbler_start()
+                        time.sleep(1)
+                        print("Wait to catch ball")
+                        main_controller.detect_ball_catch()
+                        drive_controller.stop()
+                        #exit()
                     else:
                         almost_at_ball = drive_controller.drive_to_coordinates(coordinate_data['ball'])
                         current_state = STATE_DRIVING
-                        #time.sleep(1)
-                        # main_controller.dribbler_start()
+                    #time.sleep(1)
+                    # main_controller.dribbler_start()
                         if almost_at_ball:
-                            current_state = STATE_TRAP_BALL
-                            # activate dribbler
-                            #main_controller.pre_dribbler()
-                            #time.sleep(1)
-                            #main_controller.dribbler_start()
+                            #current_state = STATE_DRIVING_STRAIGHT
+                            print("Driving straight")
+                        # activate dribbler
+
+                        #main_controller.pre_dribbler()
+                        #main_controller.dribbler_start()
+                        #time.sleep(0.5)
+
 
                     # stop and look for the goal
                     #drive_controller.stop()
@@ -163,7 +175,7 @@ try:
 
                 # cv2.imshow('Video', frame)
                 key = cv2.waitKey(1)
-                time.sleep(0.1)
+                #time.sleep(0.1)
 
             break
 

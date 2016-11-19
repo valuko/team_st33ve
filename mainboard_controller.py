@@ -49,10 +49,12 @@ class MainBoardController:
 
     def detect_ball_catch(self):
         self.is_ball = False
+        start = datetime.now()
         while True:
             #print ("Reading IR...")
+            delta = datetime.now() - start
             line = self.mainboard.readline().strip()
-            if line == self.ball_catch_cmd:
+            if line == self.ball_catch_cmd or delta.seconds > 3:
                 self.is_ball = True
                 break
             if line == self.ball_release_cmd:
