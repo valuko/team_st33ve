@@ -11,7 +11,6 @@ class MainBoardController:
     dribbler_prefix = 'd'
 
     def __init__(self, boarder):
-        #self.mainboard = serial.Serial(self.port, self.baud_rate, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE, 3)
         self.mainboard = boarder
         self.is_ball = False
 

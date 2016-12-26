@@ -1,5 +1,4 @@
 from drive_controller import DriveController
-from motor_controller import MotorController
 from coordinates import Coordinates
 from bolt_settings import BoltSettings
 from referee_controller import RefereeController
@@ -18,10 +17,9 @@ board_serial = serial.Serial(port, 9600, serial.EIGHTBITS, serial.PARITY_NONE, s
 cap = cv2.VideoCapture(0)
 app_settings = BoltSettings()
 val_dict = app_settings.read_dict()
-motor_controller = MotorController(board_serial)
-drive_controller = DriveController(motor_controller)
+drive_controller = DriveController(board_serial)
 coordinates = Coordinates(val_dict)
-#referee_controller = RefereeController(motor_controller, val_dict)
+referee_controller = RefereeController(board_serial, val_dict)
 main_controller = MainBoardController(board_serial)
 
 input_key = ""
@@ -55,14 +53,13 @@ def kick_action():
 
 try:
     # Start the referee module
-    # td1 = threading.Thread(target=referee_controller.listen)
+    td1 = threading.Thread(target=referee_controller.listen)
     # td2 = threading.Thread(target=main_controller.detect_ball_catch)
-    # td1.start()
+    td1.start()
     # td2.start()
 
     while True:
-        # if referee_controller.game_status():
-        if True:
+        if referee_controller.game_status():
             # main_controller.ping()
             main_controller.pre_dribbler()
             time.sleep(3)
@@ -130,7 +127,7 @@ try:
                         #main_controller.detect_ball_catch()
                         #drive_controller.stop()
                     elif coordinate_data['ball'][1] >= 450 and coordinate_data['ball'][0] > 320:
-                        motor_controller.move(20, -20, 0)
+                        board_serial.move(20, -20, 0)
                         print "start dribbler"
                         main_controller.dribbler_start()
                         time.sleep(1)
